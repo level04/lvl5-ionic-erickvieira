@@ -7,7 +7,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from "../pages/login/login"; // sem a extensão na frente, o arquivo importa, por padrão o TS
-import * as firebase from 'firebase'; // BANCO DE DADOS
+import * as firebase from 'firebase';
+import { UserProvider } from '../providers/user/user'; // BANCO DE DADOS
 
 // ESSE CÓDIGO CARALHUDO AQUI CONECTA COM O FIREBASE COM AS CREDENCIAIS ESPECIFICADAS PELA PLATAFORMA
 var config = {
@@ -39,7 +40,8 @@ firebase.initializeApp(config);
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    UserProvider
   ]
 })
 export class AppModule {}
