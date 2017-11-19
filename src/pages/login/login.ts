@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController } from 'ionic-angular';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { UserProvider } from '../../providers/user/user';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import { OneSignal } from '@ionic-native/onesignal';
 
 /**
  * Generated class for the LoginPage page.
@@ -22,14 +25,17 @@ export class LoginPage {
     password: new FormControl('', Validators.minLength(6))
   })
 
+  public db: firebase.firestore.Firestore = firebase.firestore();
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
     public userProvider: UserProvider,
-    public loadingCtrl: LoadingController,) {
+    public loadingCtrl: LoadingController,
+    private oneSignal: OneSignal,) {
     
-    
-    
+    this.oneSignal.startInit('d7fd2c28-feaa-482a-afbb-444d6292b534');
+
   }
 
   ionViewDidLoad() {
@@ -45,6 +51,12 @@ export class LoginPage {
     loading.present();
     this.userProvider.login(value).then(() => {
       loading.dismiss();
+      const oneSignalId = 1123;
+      const email = form.value.email;
+      this.db.collection('userInfo').doc(form.value.email).set({
+        oneSignalId,
+        email
+      })
     }).catch((err) => {
       console.log(err);
       loading.dismiss();
